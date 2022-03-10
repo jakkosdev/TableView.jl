@@ -3,18 +3,21 @@ module TableView
 using Tables
 using WebIO, JSExpr, JSON, Dates, UUIDs
 using Observables: @map
+using RelocatableFolders
 
 export showtable
 
 const ag_grid_imports = []
 
+const folder_dir = @path joinpath(@__DIR__, "..")
+
 function __init__()
-    version = readchomp(joinpath(@__DIR__, "..", "ag-grid.version"))
+    version = readchomp(joinpath(folder_dir, "ag-grid.version"))
     empty!(ag_grid_imports)
     for f in ["ag-grid.js", "ag-grid.css", "ag-grid-light.css", "ag-grid-dark.css"]
-        push!(ag_grid_imports, normpath(joinpath(@__DIR__, "..", "deps", "ag-grid-$(version)", f)))
+        push!(ag_grid_imports, normpath(joinpath(folder_dir, "deps", "ag-grid-$(version)", f)))
     end
-    pushfirst!(ag_grid_imports, normpath(joinpath(@__DIR__, "rowNumberRenderer.js")))
+    pushfirst!(ag_grid_imports, normpath(joinpath(folder_dir, "src", "rowNumberRenderer.js")))
 end
 
 to_css_size(s::AbstractString) = s
